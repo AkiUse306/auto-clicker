@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="620"
+        x:Class="AutoClickerGui.MainWindow"
+        Title="Auto Clicker .NET"
+        Width="900" Height="620"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="24" RowDefinitions="Auto,*" ColumnDefinitions="1.2*,0.8*">
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Spacing="6">
+            <TextBlock Text="Auto Clicker .NET" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="A real C#/.NET desktop GUI for click automation. Start, stop, and tune CPS from the UI." TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Grid.Column="0" Padding="18" CornerRadius="18" Background="#111827">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Controls" FontSize="18" FontWeight="SemiBold" />
+                <Button x:Name="ToggleButton" Content="Start Auto Clicker" HorizontalAlignment="Stretch" Height="44" />
+
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Clicks per second" />
+                    <Slider x:Name="CpsSlider" Minimum="1" Maximum="30" Value="10" />
+                    <TextBlock x:Name="CpsLabel" Text="10 CPS" />
+                </StackPanel>
+
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Mouse button" />
+                    <ComboBox x:Name="ButtonComboBox" HorizontalAlignment="Stretch">
+                        <ComboBoxItem>Left</ComboBoxItem>
+                        <ComboBoxItem>Right</ComboBoxItem>
+                        <ComboBoxItem>Middle</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <CheckBox x:Name="HoldModeBox" Content="Hold-to-click mode" />
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="1" Padding="18" CornerRadius="18" Background="#111827">
+            <StackPanel Spacing="12">
+                <TextBlock Text="Status" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock x:Name="StatusLabel" Text="Ready to click." TextWrapping="Wrap" />
+                <TextBlock Text="This GUI is implemented in C#/.NET using Avalonia for the desktop experience." TextWrapping="Wrap" />
+                <TextBlock Text="Use the Start / Stop button to activate the click loop." TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
