@@ -1,5 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
@@ -7,7 +10,7 @@ namespace AutoClickerGui;
 
 public partial class MainWindow : Window
 {
-    private readonly DispatcherTimer _timer;
+    private CancellationTokenSource? _cts;
     private readonly Button _toggleButton;
     private readonly Slider _cpsSlider;
     private readonly TextBlock _cpsLabel;
@@ -32,9 +35,6 @@ public partial class MainWindow : Window
         _buttonComboBox.SelectedIndex = 0;
         _cpsSlider.ValueChanged += (_, _) => UpdateCpsLabel();
         _toggleButton.Click += ToggleClicker;
-
-        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
-        _timer.Tick += (_, _) => ClickOnce();
 
         UpdateCpsLabel();
     }
@@ -71,9 +71,33 @@ public partial class MainWindow : Window
             return;
         }
 
-        var intervalMs = Math.Max(1, 1000 / _cps);
-        _timer.Interval = TimeSpan.FromMilliseconds(intervalMs);
-        _timer.Start();
+        _cts = new CancellationTokenSource();
+        var token = _cts.Token;
+
+        // Start background click loop for more accurate timing
+        Task.Run(async () =>
+        {
+            var intervalMs = Math.Max(1, 1000.0 / Math.Max(1, _cps));
+            var interval = TimeSpan.FromMilliseconds(intervalMs);
+            var sw = new Stopwatch();
+
+            try
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    sw.Restart();
+                    ClickOnce();
+                    sw.Stop();
+
+                    var remaining = interval - sw.Elapsed;
+                    if (remaining > TimeSpan.Zero)
+                        await Task.Delay(remaining, token).ConfigureAwait(false);
+                    else
+                        await Task.Yield();
+                }
+            }
+            catch (TaskCanceledException) { }
+        }, token);
     }
 
     private void StopClicker()
@@ -88,7 +112,12 @@ public partial class MainWindow : Window
             SendMouseUp(up);
         }
 
-        _timer.Stop();
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
     }
 
     private void ClickOnce()
@@ -99,18 +128,17 @@ public partial class MainWindow : Window
 
     private static void SendClick(uint downFlags, uint upFlags)
     {
-        mouse_event(downFlags, 0, 0, 0, UIntPtr.Zero);
-        mouse_event(upFlags, 0, 0, 0, UIntPtr.Zero);
+        NativeMouse.SendClick(downFlags, upFlags);
     }
 
     private static void SendMouseDown(uint flags)
     {
-        mouse_event(flags, 0, 0, 0, UIntPtr.Zero);
+        NativeMouse.SendMouseDown(flags);
     }
 
     private static void SendMouseUp(uint flags)
     {
-        mouse_event(flags, 0, 0, 0, UIntPtr.Zero);
+        NativeMouse.SendMouseUp(flags);
     }
 
     private static (uint down, uint up) GetButtonFlags(string? selection)
@@ -122,9 +150,6 @@ public partial class MainWindow : Window
             _ => (MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP),
         };
     }
-
-    [DllImport("user32.dll")]
-    private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
 
     private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
     private const uint MOUSEEVENTF_LEFTUP = 0x0004;

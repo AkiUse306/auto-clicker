@@ -4,17 +4,41 @@ A cross-platform auto clicker with a real C#/.NET desktop GUI, plus the existing
 
 ## Included
 
-- Electron desktop shell and preload bridge
-- React + Tailwind renderer for a modern dashboard UI
-- Auto-updater integration via electron-updater
-- Release workflow for Windows and macOS packaging
-- Monorepo-style folder layout for desktop, website, core, automation, and shared packages
 
 ## Quick start
 
 ### .NET GUI (C# / .NET)
 1. Run `dotnet build apps/desktop-dotnet/AutoClickerGui.csproj`
 2. Run `dotnet publish apps/desktop-dotnet/AutoClickerGui.csproj -c Release -r linux-x64 --self-contained false`
+
+## Desktop .NET app (Avalonia)
+
+The repo includes a native C#/.NET desktop GUI at `apps/desktop-dotnet` implemented with Avalonia.
+
+Build and publish (example):
+
+```bash
+# build electron app
+pnpm build
+
+# publish .NET app (produces artifacts under publish/)
+scripts/publish-dotnet.sh
+
+# create DMG (on macOS, after publishing)
+# npm i -g create-dmg
+# create-dmg --overwrite publish/osx-x64/AutoClickerGui.app dist/AutoClickerGui.dmg
+```
+
+Electron packaging is configured via `electron-builder` to produce `.exe` (NSIS) and `.dmg` targets using:
+
+```bash
+pnpm dist:win  # builds Windows installer (.exe)
+pnpm dist:mac  # builds macOS .dmg
+```
+
+Notes:
+- The Avalonia desktop app currently implements Windows and Linux (X11) click simulation. macOS requires additional implementation and permissions for synthetic events.
+- See `apps/desktop-dotnet/MainWindow.axaml.cs` and `apps/desktop-dotnet/NativeMouse.cs` for implementation details.
 
 ### Electron fallback
 1. Install dependencies with `pnpm install`
