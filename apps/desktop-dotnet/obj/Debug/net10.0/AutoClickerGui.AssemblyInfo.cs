@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoClickerGui")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+98624ba7681aab6bf55c22150d86b3af907fd2c2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0c63d99b389e2cf746701d87d1f385514a14a74")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoClickerGui")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoClickerGui")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
