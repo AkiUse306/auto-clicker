@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace AutoClickerGui;
+namespace AutoClickerCli;
 
 public static class NativeMouse
 {
@@ -220,4 +220,3 @@ public static class NativeMouse
     }
     #endregion
 }
-

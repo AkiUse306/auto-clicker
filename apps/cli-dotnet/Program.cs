@@ -7,11 +7,12 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        // Simple stdin command loop: commands are lines like
-        // click left
-        // down right
-        // up left
-        // The CLI runs until stdin closes.
+        // Advanced stdin command loop supporting:
+        // click left [jitter_min jitter_max] - single click with optional jitter
+        // burst left count delay [jitter_min jitter_max] - burst clicks
+        // down left - mouse down
+        // up left - mouse up
+        // hold left duration - hold mouse button
 
         string? line;
         while ((line = Console.ReadLine()) != null)
@@ -23,29 +24,62 @@ class Program
 
                 var cmd = parts[0].ToLowerInvariant();
                 var btn = parts.Length > 1 ? parts[1].ToLowerInvariant() : "left";
+                var (down, up) = NativeMouse.GetButtonFlagsForCli(btn);
 
-                uint down, up;
-                (down, up) = parts.Length > 1 ? NativeMouse.GetButtonFlagsForCli(btn) : NativeMouse.GetButtonFlagsForCli("left");
+                switch (cmd)
+                {
+                    case "click":
+                        {
+                            NativeMouse.SendClick(down, up);
+                            // Optional jitter sleep
+                            if (parts.Length > 3 && int.TryParse(parts[2], out var jitterMin) && int.TryParse(parts[3], out var jitterMax))
+                            {
+                                var jitterMs = new Random().Next(jitterMin, jitterMax + 1);
+                                if (jitterMs > 0) await Task.Delay(jitterMs);
+                            }
+                        }
+                        break;
 
-                if (cmd == "click")
-                {
-                    NativeMouse.SendClick(down, up);
-                }
-                else if (cmd == "down")
-                {
-                    NativeMouse.SendMouseDown(down);
-                }
-                else if (cmd == "up")
-                {
-                    NativeMouse.SendMouseUp(up);
+                    case "burst":
+                        {
+                            if (parts.Length < 4 || !int.TryParse(parts[2], out var count) || !int.TryParse(parts[3], out var delayMs))
+                                continue;
+
+                            for (int i = 0; i < count; i++)
+                            {
+                                NativeMouse.SendClick(down, up);
+                                if (i < count - 1 && delayMs > 0) await Task.Delay(delayMs);
+                            }
+                        }
+                        break;
+
+                    case "down":
+                        NativeMouse.SendMouseDown(down);
+                        break;
+
+                    case "up":
+                        NativeMouse.SendMouseUp(up);
+                        break;
+
+                    case "hold":
+                        {
+                            if (parts.Length < 3 || !int.TryParse(parts[2], out var holdMs))
+                                continue;
+
+                            NativeMouse.SendMouseDown(down);
+                            await Task.Delay(holdMs);
+                            NativeMouse.SendMouseUp(up);
+                        }
+                        break;
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
 
         await Task.CompletedTask;
     }
 }
+
