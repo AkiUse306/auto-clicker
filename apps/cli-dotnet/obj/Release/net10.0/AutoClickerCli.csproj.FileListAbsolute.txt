@@ -1,9 +1,9 @@
+/workspaces/auto-clicker/apps/cli-dotnet/obj/Release/net10.0/AutoClickerCli.GeneratedMSBuildEditorConfig.editorconfig
 /workspaces/auto-clicker/apps/cli-dotnet/bin/Release/net10.0/AutoClickerCli
 /workspaces/auto-clicker/apps/cli-dotnet/bin/Release/net10.0/AutoClickerCli.deps.json
 /workspaces/auto-clicker/apps/cli-dotnet/bin/Release/net10.0/AutoClickerCli.runtimeconfig.json
 /workspaces/auto-clicker/apps/cli-dotnet/bin/Release/net10.0/AutoClickerCli.dll
 /workspaces/auto-clicker/apps/cli-dotnet/bin/Release/net10.0/AutoClickerCli.pdb
-/workspaces/auto-clicker/apps/cli-dotnet/obj/Release/net10.0/AutoClickerCli.GeneratedMSBuildEditorConfig.editorconfig
 /workspaces/auto-clicker/apps/cli-dotnet/obj/Release/net10.0/AutoClickerCli.AssemblyInfoInputs.cache
 /workspaces/auto-clicker/apps/cli-dotnet/obj/Release/net10.0/AutoClickerCli.AssemblyInfo.cs
 /workspaces/auto-clicker/apps/cli-dotnet/obj/Release/net10.0/AutoClickerCli.csproj.CoreCompileInputs.cache

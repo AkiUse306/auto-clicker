@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoClickerCli")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0c63d99b389e2cf746701d87d1f385514a14a74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+43635cbb39d13d8b547e30a97b3d09fc48b28d5c")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoClickerCli")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoClickerCli")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
